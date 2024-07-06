@@ -1,2 +1,2 @@
-# simaarch64
-Aarch64 simulator with A64 instructions
+# SimAARCH64
+AARCH64 simulator with A64 instructions
