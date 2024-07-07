@@ -1,0 +1,231 @@
+/*
+
+    Name:       dracula
+    Author:     Michael Kaminsky (http://github.com/mkaminsky11)
+
+    Original dracula color scheme by Zeno Rocha (https://github.com/zenorocha/dracula-theme)
+
+*/
+@import url('https://fonts.cdnfonts.com/css/cascadia-code');
+
+.cm-s-dracula.CodeMirror,
+.cm-s-dracula .CodeMirror-gutters {
+    background-color: #282830 !important;
+    color: #f8f8f2 !important;
+    border: none;
+    font-size: 0.9rem;
+    font-family: 'Cascadia Code', sans-serif;
+}
+
+.cm-s-dracula .CodeMirror-gutters {
+    color: #282a36;
+}
+
+.cm-s-dracula .CodeMirror-cursor {
+    border-left: solid thin #f8f8f0;
+}
+
+.cm-s-dracula .CodeMirror-linenumber {
+    color: #a0a0ad;
+}
+
+.cm-s-dracula .CodeMirror-selected {
+    background: rgba(255, 255, 255, 0.10);
+}
+
+.cm-s-dracula .CodeMirror-line::selection,
+.cm-s-dracula .CodeMirror-line>span::selection,
+.cm-s-dracula .CodeMirror-line>span>span::selection {
+    background: rgba(255, 255, 255, 0.10);
+}
+
+.cm-s-dracula .CodeMirror-line::-moz-selection,
+.cm-s-dracula .CodeMirror-line>span::-moz-selection,
+.cm-s-dracula .CodeMirror-line>span>span::-moz-selection {
+    background: rgba(255, 255, 255, 0.10);
+}
+
+.cm-s-dracula span.cm-comment {
+    color: #6272a4;
+}
+
+.cm-s-dracula span.cm-string,
+.cm-s-dracula span.cm-string-2 {
+    color: #f1fa8c;
+}
+
+.cm-s-dracula span.cm-number {
+    color: #a676e9;
+}
+
+.cm-s-dracula span.cm-variable {
+    color: #50fa7b;
+}
+
+.cm-s-dracula span.cm-variable-2 {
+    color: white;
+}
+
+.cm-s-dracula span.cm-def {
+    color: #50fa7b;
+}
+
+.cm-s-dracula span.cm-operator {
+    color: #ff79c6;
+}
+
+.cm-s-dracula span.cm-keyword {
+    color: #ff79c6;
+}
+
+.cm-s-dracula span.cm-atom {
+    color: #bd93f9;
+}
+
+.cm-s-dracula span.cm-meta {
+    color: #f8f8f2;
+}
+
+.cm-s-dracula span.cm-tag {
+    color: #ff79c6;
+}
+
+.cm-s-dracula span.cm-attribute {
+    color: #50fa7b;
+}
+
+.cm-s-dracula span.cm-qualifier {
+    color: #50fa7b;
+}
+
+.cm-s-dracula span.cm-property {
+    color: #66d9ef;
+}
+
+.cm-s-dracula span.cm-builtin {
+    color: #50fa7b;
+}
+
+.cm-s-dracula span.cm-variable-3,
+.cm-s-dracula span.cm-type {
+    color: #ffb86c;
+}
+
+.cm-s-dracula .CodeMirror-activeline-background {
+    background: rgba(255, 255, 255, 0);
+}
+
+.cm-s-dracula .CodeMirror-matchingbracket {
+    text-decoration: underline;
+    color: white !important;
+}
+
+table {
+    border-collapse: collapse;
+  }
+
+  .table-dark,
+.table-dark > th,
+.table-dark > td {
+  background-color: #d1d1d5;
+}
+
+.table-dark th,
+.table-dark td,
+.table-dark thead th,
+.table-dark tbody + tbody {
+  border-color: #ffffff;
+  text-align: left; 
+}
+
+.table-hover .table-dark:hover {
+  background-color: #c4c4c9;
+}
+
+.table-hover .table-dark:hover > td,
+.table-hover .table-dark:hover > th {
+  background-color: #c4c4c9;
+}
+
+  .table-dark {
+    color: #fff;
+    background-color:rgba(255, 255, 255, 0);;
+  }
+  
+  .table-dark th,
+  .table-dark td,
+  .table-dark thead th {
+    border-color: #ffffff;
+  }
+  
+  .table-dark.table-bordered {
+    border: 0;
+  }
+  
+  .table-dark.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+  
+  .table-dark.table-hover tbody tr:hover {
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0);
+  }
+
+  .table-responsive {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .table-responsive > .table-bordered {
+    border: 0;
+  }
+
+  @media (max-width: 575.98px) {
+    .table-responsive-sm {
+      display: block;
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .table-responsive-sm > .table-bordered {
+      border: 0;
+    }
+  }
+  
+  @media (max-width: 767.98px) {
+    .table-responsive-md {
+      display: block;
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .table-responsive-md > .table-bordered {
+      border: 0;
+    }
+  }
+  
+  @media (max-width: 991.98px) {
+    .table-responsive-lg {
+      display: block;
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .table-responsive-lg > .table-bordered {
+      border: 0;
+    }
+  }
+  
+  @media (max-width: 1199.98px) {
+    .table-responsive-xl {
+      display: block;
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .table-responsive-xl > .table-bordered {
+      border: 0;
+    }
+  }
