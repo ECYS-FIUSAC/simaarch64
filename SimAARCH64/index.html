@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arm Simulator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/codemirror.min.css">
+    <link rel="stylesheet" href="styles/theme.css">
+    <link rel="stylesheet" href="styles/scroll.css">
+    <link rel="stylesheet" href="styles/tabs.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="tailwind.config.js"></script>
+    <script src="src/tabs/tab.js"></script>
+    <!-- <script type="text/javascript" src="src/Simulator/Lang/parser.js"></script> -->
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <script src="
+        https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js
+        "></script>
+    <link href="
+        https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.min.css
+        " rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+</head>
+
+<style>
+    .CodeMirror {
+        height: 100% !important;
+        width: 100% !important;
+        border-radius: 10px !important;
+    }
+</style>
+
+
+<body class="w-full h-screen bg-[#121317] overflow-hidden">
+    <div class="w-full h-full flex flex-col">
+        <header class="flex items-center py-2 px-5 w-full justify-between bg-[#1B1C1F]">
+            <div class="flex flex-row py-1 text-white rounded-md gap-3 items-center  w-7/12">
+                <svg xmlns="http://www.w3.org/2000/svg" height="1.1em" viewBox="0 0 512 156" class="add_tab">
+                    <path fill="#4380e8"
+                        d="M309.55 3.895h34.309v13.658a45.455 45.455 0 0 1 36.45-17.51a43.29 43.29 0 0 1 38.183 21.645C430.743 4.176 449.315.042 462.259.042c17.857 0 33.615 8.399 42.035 23.117C507.086 28.073 512 38.917 512 60.281v91.062h-34.33V70.087c0-16.45-1.753-23.118-3.16-26.256c-2.164-5.606-7.36-12.987-19.61-12.987a25.368 25.368 0 0 0-20.326 10.822c-5.952 8.399-6.645 21.018-6.645 33.616v76.061H393.6V70.087c0-16.45-1.753-23.118-3.16-26.256c-2.164-5.606-7.359-12.987-19.61-12.987a25.347 25.347 0 0 0-20.304 10.822c-5.952 8.399-6.666 21.018-6.666 33.616v76.061h-34.31zm-118.832 0h34.33v13.312a59.417 59.417 0 0 1 14.35-12.251A39.633 39.633 0 0 1 260.416.042a50.91 50.91 0 0 1 26.97 7.013l-14.091 31.17a31.083 31.083 0 0 0-17.511-5.26c-7.36 0-14.72 1.039-21.364 8.052c-9.46 10.152-9.46 24.156-9.46 33.962v76.364h-34.22zM34.978 78.14c0 25.563 16.105 46.927 40.976 46.927c21.645 0 41.667-15.758 41.667-46.58c0-32.23-19.957-47.62-41.667-47.62c-24.87 0-40.975 21.017-40.975 47.273M115.52 3.895h34.395v147.448h-34.373v-15.411a56.624 56.624 0 0 1-44.113 19.957C25.974 155.889 0 118.074 0 77.446C0 29.458 32.923.042 71.798.042a53.745 53.745 0 0 1 43.788 21.018z" />
+                </svg>
+                <label for="file-input"
+                    class="flex items-center text-[#afafc0] gap-2 px-3 py-2 hover:bg-[#282B32] hover:text-white transition-all rounded-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="1.3em" viewBox="0 0 24 24">
+                        <path fill="currentColor"
+                            d="M4 20q-.825 0-1.412-.587T2 18V6q0-.825.588-1.412T4 4h5.175q.4 0 .763.15t.637.425L12 6h9q.425 0 .713.288T22 7t-.288.713T21 8H7.85q-1.55 0-2.7.975T4 11.45V18l1.975-6.575q.2-.65.738-1.037T7.9 10h12.9q1.025 0 1.613.813t.312 1.762l-1.8 6q-.2.65-.737 1.038T19 20z" />
+                    </svg>
+                    Abrir
+                    <input type="file" id="file-input" style="display: none;" onchange="openFile(event)">
+                </label>
+                <button
+                    class="flex items-center text-[#afafc0] gap-2 px-3 py-2 hover:bg-[#282B32] hover:text-white transition-all rounded-md"
+                    onclick="saveFile()">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="1.3em" viewBox="0 0 24 24">
+                        <g fill="none" fillRule="evenodd">
+                            <path
+                                d="M24 0v24H0V0zM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022m-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z" />
+                            <path fill="currentColor"
+                                d="M12 2a1 1 0 0 0-1 1v2H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-6V3a1 1 0 0 0-1-1m1 3v8.828L14.828 12a1 1 0 0 1 1.415 1.414l-3.36 3.359a1.25 1.25 0 0 1-1.767 0l-3.359-3.359A1 1 0 1 1 9.172 12L11 13.828V5z" />
+                        </g>
+                    </svg>
+                    Descargar
+                </button>
+                <button
+                    class="flex items-center text-[#afafc0]  gap-2 px-3 py-2 hover:bg-[#282B32] hover:text-white transition-all rounded-md"
+                    onclick="cleanEditor()">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="1.3em" viewBox="0 0 24 24">
+                        <path fill="currentColor"
+                            d="M15.14 3c-.51 0-1.02.2-1.41.59L2.59 14.73c-.78.77-.78 2.04 0 2.83L5.03 20h7.66l8.72-8.73c.79-.77.79-2.04 0-2.83l-4.85-4.85c-.39-.39-.91-.59-1.42-.59M17 18l-2 2h7v-2" />
+                    </svg>
+                    Limpiar
+                </button>
+            </div>
+            <div class="flex items-center gap-4 flex-row">
+                <span id="timer" class="text-gray-400 text-xl">00.00 s</span>
+                <!-- <div class="w-[2px] h-6 bg-[#9ca3af] rounded-sm border-dashed"></div> -->
+                <button class="text-[#49b9a0] transition-all hover:text-[#58dfc1] hover:scale-125" id="printTab"
+                    onclick="Analyze()">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="1.6em" viewBox="0 0 256 256">
+                        <path fill="currentColor"
+                            d="M240 128a15.74 15.74 0 0 1-7.6 13.51L88.32 229.65a16 16 0 0 1-16.2.3A15.86 15.86 0 0 1 64 216.13V39.87a15.86 15.86 0 0 1 8.12-13.82a16 16 0 0 1 16.2.3l144.08 88.14A15.74 15.74 0 0 1 240 128" />
+                    </svg>
+                </button>
+                <div class="h-6 border border-gray-500 border-dashed"></div>
+                <button
+                    class="text-[#0090f7] w-fit h-fit transition-all hover:text-[#51aced] hover:scale-125 cursor-pointer" id="start-debug"">
+                <svg xmlns="http://www.w3.org/2000/svg" height="1.7em" viewBox="0 0 24 24">
+                    <g fill="none" fillRule="evenodd">
+                        <path
+                            d="M24 0v24H0V0zM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z" />
+                        <path fill="currentColor"
+                            d="M7.67 5.5A5 5 0 0 1 12 3a5 5 0 0 1 4.33 2.5L17.2 7H6.8zm-4.117.606a1 1 0 0 1 1.341.447c.147.293.5.674.973.99C6.353 7.867 6.781 8 7 8h10c.219 0 .647-.133 1.133-.457c.474-.316.826-.697.973-.99a1 1 0 1 1 1.788.894c-.353.707-1 1.326-1.652 1.76a5.5 5.5 0 0 1-.966.516A9.8 9.8 0 0 1 18.892 12H21a1 1 0 1 1 0 2h-2.012a10 10 0 0 1-.74 3.327c.572.33.963.86 1.209 1.35A5.5 5.5 0 0 1 20 21a1 1 0 1 1-2 0c0-.374-.101-.966-.332-1.428c-.13-.26-.26-.409-.385-.49c-1.056 1.486-2.539 2.54-4.283 2.835V13a1 1 0 1 0-2 0v8.917c-1.744-.295-3.227-1.35-4.283-2.834c-.126.08-.255.23-.385.49A3.5 3.5 0 0 0 6 21a1 1 0 1 1-2 0a5.5 5.5 0 0 1 .543-2.322c.246-.492.637-1.02 1.209-1.35A10 10 0 0 1 5.012 14H3a1 1 0 1 1 0-2h2.108a9.8 9.8 0 0 1 .616-2.277a5.5 5.5 0 0 1-.966-.516c-.651-.434-1.3-1.053-1.652-1.76a1 1 0 0 1 .447-1.341" />
+                    </g>
+                </svg>
+                </button>
+                <button
+                    class="text-[#8da3af] w-fit h-fit transition-all hover:text-[#8da3af] hover:scale-125 cursor-pointer" id="next-inst" disabled>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="1.3em" viewBox="0 0 1025 1025">
+                        <path fill="currentColor"
+                            d="m1009.86 551l-435 463q-25 27-62-13V24q37-39 62-12l435 463q15 16 15 38t-15 38m-881 474q-53 0-90.5-37.5T.86 897V128q0-53 37.5-90.5T128.86 0t90.5 37.5t37.5 90.5v769q0 53-37.5 90.5t-90.5 37.5" />
+                    </svg>
+                </button>
+                <button class="text-[#8da3af] w-fit h-fit transition-all hover:text-[#8da3af] hover:scale-125 cursor-pointer" id="end-deb" disabled>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="1.5em" viewBox="0 0 16 16">
+                        <path fill="currentColor" fillRule="evenodd"
+                            d="M4.5 1.5a3 3 0 0 0-3 3v7a3 3 0 0 0 3 3h7a3 3 0 0 0 3-3v-7a3 3 0 0 0-3-3z" clipRule="evenodd" />
+                    </svg>
+                </button>
+            </div>
+        </header>
+        <section class=" p-4 h-[91%] w-full flex flex-row gap-3">
+            <article class="w-[57%] flex flex-col bg-[#1B1C1F] rounded-md px-4 pt-2 h-[99%]]">
+                <!-- <div class="text-white flex flex-row items-center gap-2 py-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="1.2em" viewBox="0 0 14 14">
+                        <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m.5 13.5l2-2l-2-2m2-2v-6a1 1 0 0 1 1-1h5l5 5v7a1 1 0 0 1-1 1H10" />
+                            <path d="M8.5.5v5h5m-9 8h3" />
+                        </g>
+                    </svg>
+                    <span>Undefined.txt</span>
+                </div> -->
+                <!-- <textarea id="code" name="code" class="h-full rounded bg-[#282830]"></textarea> -->
+                <div class="tab-container">
+                    <div class="tabs">
+                        <button class="add-tab" onclick="addNewTab()">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="1.1em" viewBox="0 0 24 24">
+                                <path fill="currentColor"
+                                    d="M18 10h-4V6a2 2 0 0 0-4 0l.071 4H6a2 2 0 0 0 0 4l4.071-.071L10 18a2 2 0 0 0 4 0v-4.071L18 14a2 2 0 0 0 0-4" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="tab-contents">
+                        <!-- Contenidos de las pestañas se agregarán aquí -->
+                    </div>
+                </div>
+                <div class="h-[7.5%] w-full flex flex-row items-center justify-center text-white gap-3 shrink">
+                    <span class="text-[#949aaa] font-semibold">Instrucción Actual</span>
+                    <input type="text" id="show-instructions"
+                        class=" h-full grow  bg-[#282830] text-[#a0a0ad] outline-none p-4 rounded-md overflow-x-auto"
+                        readonly>
+                </div>
+            </article>
+            <aside class="w-[42%] flex flex-col bg-[#1B1C1F] rounded-md px-4 py-3 gap-3">
+                <div class="text-white flex flex-row gap-2">
+                    <button class="tab-btn-result" onclick="openTab('tabresult1','tab1-result-btn')"
+                        id="tab1-result-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="1.3em" viewBox="0 0 20 20">
+                            <path fill="currentColor" fillRule="evenodd"
+                                d="M2 5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2zm3.293 1.293a1 1 0 0 1 1.414 0l3 3a1 1 0 0 1 0 1.414l-3 3a1 1 0 0 1-1.414-1.414L7.586 10L5.293 7.707a1 1 0 0 1 0-1.414M11 12a1 1 0 1 0 0 2h3a1 1 0 1 0 0-2z"
+                                clipRule="evenodd" />
+                        </svg>
+                        <span>Consola</span>
+
+                    </button>
+                    <button class="tab-btn-result" onclick="openTab('tabresult2','tab2-result-btn')"
+                        id="tab2-result-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="1.2em" viewBox="0 0 24 24">
+                            <path fill="currentColor"
+                                d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10s-4.477 10-10 10m-1-7v2h2v-2zm0-8v6h2V7z" />
+                        </svg>
+                        <span>Errores</span>
+                    </button>
+                    <button class="tab-btn-result" onclick="openTab('tabresult3','tab3-result-btn')"
+                        id="tab3-result-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="1.4em" viewBox="0 0 48 48">
+                            <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"
+                                strokeWidth="4">
+                                <path d="M24 33V15" />
+                                <path fill="currentColor" d="M10 9h28v6H10z" />
+                                <path d="m8 32l6-7h19.974L40 32" />
+                                <path fill="currentColor" d="M4 33h8v8H4zm16 0h8v8h-8zm16 0h8v8h-8z" />
+                            </g>
+                        </svg>
+                        <span>CST</span>
+                    </button>
+                    <button class="tab-btn-result" onclick="openTab('tabresult4','tab4-result-btn')"
+                        id="tab4-result-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="1.4em" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M3 8V3h18v5zm0 13V10h4.5v11zm13.5 0V10H21v11zm-7 0V10h5v11z" />
+                        </svg>
+                        <span>Cuadruplos</span>
+                    </button>
+                    <button class="tab-btn-result" onclick="openTab('tabresult5','tab5-result-btn')"
+                        id="tab5-result-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="1.4em" viewBox="0 0 24 24">
+                            <path fill="currentColor"
+                                d="M10 20q-.825 0-1.412-.587T8 18t.588-1.412T10 16h10q.825 0 1.413.588T22 18t-.587 1.413T20 20zm0-6q-.825 0-1.412-.587T8 12t.588-1.412T10 10h10q.825 0 1.413.588T22 12t-.587 1.413T20 14zm0-6q-.825 0-1.412-.587T8 6t.588-1.412T10 4h10q.825 0 1.413.588T22 6t-.587 1.413T20 8zM4 8q-.825 0-1.412-.587T2 6t.588-1.412T4 4t1.413.588T6 6t-.587 1.413T4 8m0 6q-.825 0-1.412-.587T2 12t.588-1.412T4 10t1.413.588T6 12t-.587 1.413T4 14m0 6q-.825 0-1.412-.587T2 18t.588-1.412T4 16t1.413.588T6 18t-.587 1.413T4 20" />
+                        </svg>
+                        <span>Registros</span>
+                    </button>
+                </div>
+                <!-- <textarea name="" id="" class="w-full bg-[#282830] h-full outline-none resize-none rounded-md"
+                    readonly></textarea> -->
+                <div id="tabresult1" class="tab-result">
+                    <textarea name="" id="console-output"
+                        class="w-full bg-[#282830] h-[97%] outline-none resize-none rounded-md" wrap="off" readonly></textarea>
+                </div>
+                <div id="tabresult2" class="tab-result">
+                    <div id="error__table">
+                        <table id="errorTable" class="table table-dark" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>Tipo de Error</th>
+                                    <th>Descripción</th>
+                                    <th>Fila</th>
+                                    <th>Columna</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div id="tabresult3" class="tab-result">
+                </div>
+                <div id="tabresult4" class="tab-result">
+                    <div class="w-full h-full flex pl-1">
+                        <table id="quad-table" class="w-full h-14 text-sm text-left overflow-auto">
+                            <thead class="text-xs text-gray-400 uppercase">
+                                <tr>
+                                    <th scope="col" class="py-2 w-[18%]">op</th>
+                                    <th scope="col" class="py-2 w-[16%]">arg1</th>
+                                    <th scope="col" class="py-2 w-[16%]">arg2</th>
+                                    <th scope="col" class="py-2 w-[16%]">arg3</th>
+                                    <th scope="col" class="py-2 w-[18%]">res</th>
+                                </tr>
+                            </thead>
+                            <tbody id="quad-body">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="tabresult5" class="tab-result">
+                    <div class="w-full h-full flex pl-1">
+                        <table id="quad-table" class="w-full h-14 text-sm text-left overflow-auto">
+                            <thead class="text-xs text-gray-400 uppercase">
+                                <tr>
+                                    <th scope="col" class="py-2 w-[30%]">Registro</th>
+                                    <th scope="col" class="py-2 w-[60%]">Valor</th>
+                                </tr>
+                            </thead>
+                            <tbody id="register-body">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </aside>
+
+        </section>
+    </div>
+</body>
+<!-- CodeMirror JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/mode/gas/gas.min.js"></script>
+<script src="src/Simulator/environment/type.js"></script>
+<script src="src/Simulator/environment/Memory.js"></script>
+<!-- ============================= PARSER ============================== -->
+<script src="src/Simulator/parser/parser1.js"></script>
+<script src="src/Simulator/environment/Flags.js"></script>
+<script src="src/Simulator/main.js"></script>
+<!-- ============================= INTERPRETER ============================== -->
+<script src="src/Simulator/environment/ast.js"></script>
+<script src="src/Simulator/environment/cst.js"></script>
+<script src="src/Simulator/environment/environment.js"></script>
+<script src="src/Simulator/environment/pState.js"></script>
+<script src="src/Simulator/environment/registers.js"></script>
+
+<!-- <script src="src/Simulator/environment/symbol.js"></script> -->
+<script src="src/Simulator/interfaces/expression.js"></script>
+<script src="src/Simulator/interfaces/instruction.js"></script>
+<script src="src/Simulator/execute/executer.js"></script>
+<script src="src/Simulator/execute/root.js"></script>
+<script src="src/Simulator/execute/textSelection.js"></script>
+<script src="src/Simulator/expressions/Operation.js"></script>
+<script src="src/Simulator/expressions/Register.js"></script>
+<script src="src/Simulator/expressions/Primitive.js"></script>
+<!-- <script src="src/Simulator/expressions/Immediate.js"></script> -->
+<script src="src/Simulator/expressions/VarAccess.js"></script>
+<script src="src/Simulator/generator/generator.js"></script>
+<script src="src/Simulator/generator/quadruples.js"></script>
+<script src="src/Simulator/instructions/systemCall.js"></script>
+<script src="src/Simulator/instructions/label.js"></script>
+<script src="src/Simulator/instructions/section.js"></script>
+<script src="src/Simulator/instructions/variables.js"></script>
+<script src="src/Simulator/instructions/Movment.js"></script>
+<script src="src/Simulator/instructions/ShiftRotate.js"></script>
+<script src="src/Simulator/instructions/Atomic.js"></script>
+<script src="src/Simulator/instructions/BarrierOp.js"></script>
+<script src="src/Simulator/instructions/BitManipulation.js"></script>
+<script src="src/Simulator/instructions/CheckSum.js"></script>
+<script src="src/Simulator/instructions/Conditional.js"></script>
+<script src="src/Simulator/instructions/Jump.js"></script>
+<script src="src/Simulator/instructions/LoadStore.js"></script>
+<script src="src/Simulator/instructions/System.js"></script>
+<script src="src/Simulator/instructions/Logical.js"></script>
+<script src="src/Simulator/expressions/Inmediate.js"></script>
+
+<script src="src/Simulator/environment/symbol.js"></script>
+<script src="src/Simulator/environment/SymbolTab.js"></script>
+<script src="src/Simulator/environment/SymbolTable.js"></script>
+<script src="src/Simulator/expressions/AccessMemory.js"></script>
+<!-- <script src="src/Simulator/environment/"></script> -->
+
+<!-- ============================= MAIN ============================== -->
+
+
+<script>
+    addNewTab();
+    function handleFileChange(input) {
+            const files = input.files;
+            if (files.length > 0) {
+                const fileName = files[0].name;
+                // console.log('Archivo seleccionado:', fileName);
+
+                let nameFile = document.getElementById('label-name');
+                nameFile.innerHTML = fileName;
+            }
+        }
+    document.addEventListener("DOMContentLoaded", function () {
+        openTab('tabresult1', 'tab1-result-btn'); // Abre la primera pestaña por defecto al cargar la página
+
+        
+        
+        // Swal.fire({
+        //     text: "How was your experience getting help with this issue?",
+        //     html: `<div style="display: flex; flex-direction: column; border: 2px dashed #485773; cursor: pointer; border-radius: 0.5rem; transition: transform 0.15s ease-in-out; transition: all 0.15s ease-in-out;">
+        //     <input type="file"  id="name"  class="input-f" hidden onchange="handleFileChange(this)"/>
+        //     <label for="name" style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem;padding:15px 0px">
+
+        //         <svg xmlns="http://www.w3.org/2000/svg"  height="2em" viewBox="0 0 384 512"><path fill="currentColor" d="M320 464c8.8 0 16-7.2 16-16V160h-80c-17.7 0-32-14.3-32-32V48H64c-8.8 0-16 7.2-16 16v384c0 8.8 7.2 16 16 16zM0 64C0 28.7 28.7 0 64 0h165.5c17 0 33.3 6.7 45.3 18.7l90.5 90.5c12 12 18.7 28.3 18.7 45.3V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64z"/></svg>
+        //         <p id="label-name" style="color: #9ea2ab;">Clic para elegir el archivo</p>
+        //     </div>
+        // </div>`,
+        //     background: '#232529',
+        //     showClass: {
+        //         popup: 'animate__bounceIn'
+        //     },
+        //     backdrop: `
+        //         rgba(40,40,48,0.6)
+        //         left top
+        //     `
+        // }).then((result) => {
+        //     if (result.isConfirmed) {
+        //         const fileInput = document.getElementById('name');
+        //         const selectedFile = fileInput.files[0]; // El primer archivo seleccionado (si hay alguno)
+        //         console.log(selectedFile);
+        //     }
+        // })
+    })
+</script>
+
+</html>
