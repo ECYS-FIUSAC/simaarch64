@@ -25,6 +25,7 @@ class LoadStore extends Instruction {
                 spMemory.ldr(ast,this.op1.dir, offset );
                 return;
             }else{
+                // console.log(this.op1.dir, this.op4.execute(ast, env, gen));
                 ast?.registers?.setRegister(this.op1.dir, this.op4.execute(ast, env, gen));
             }
         }else if(this.inst === "ldrb"){
@@ -62,6 +63,10 @@ class LoadStore extends Instruction {
             if(this.op4.op1[0]=== "SP"){
                 spMemory.str(this.op1.execute(ast, env, gen).value, this.op4.execute(ast, env, gen));
             }
+            //console.log(this.op4.op1[0],this.op1.execute(ast, env, gen).value, this.op4.execute(ast, env, gen))
+            //console.log(ast.registers.getRegister(this.op1.dir), this.op4.execute(ast, env, gen))
+            //console.log(this.op4.execute(ast, env, gen), ast.registers.getRegister(this.op1.dir))
+            memory.storeWord(this.op4.execute(ast, env, gen).value, ast.registers.getRegister(this.op1.dir).value);
         }
     }
 

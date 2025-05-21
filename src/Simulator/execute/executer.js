@@ -135,6 +135,7 @@ const RootExecuterDebug = async (root, ast, env, gen, editor_deb) => {
             document.getElementById("show-instructions").value = ""
             // document.getElementById("show-instructions").value = inst.getText()
             showRegisters(ast.getRegisters())
+            showMemory(memory.getAllVariables());
             let text = inst.line + "\t\t" + editor_deb.getLine(inst.line-1).trim()
             document.getElementById("show-instructions").value = text
             if(i >= main.length){

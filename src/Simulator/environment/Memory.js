@@ -41,10 +41,11 @@ class Memory {
         } else {
             throw new Error("Tipo de valor inicial no soportado");
         }
-
-        const address = this.allocateMemory(data.length);
+        const size = Math.max(data.length, 4); // 32 bits = 4 bytes
+        const address = this.allocateMemory(size);
         new Uint8Array(this.memory, Number(address), data.length).set(data);
         const symbol = new Symbol(address, initialValue, id, type);
+        // console.log(symbol);
         this.symbolTable.set(name, symbol);
         return address;
     }
@@ -183,9 +184,22 @@ class Memory {
         }
     }
 
-    getAllVariables(){
-        return this.symbolTable;
+getAllVariables() {
+    const variables = [];
+
+    for (const [name, symbol] of this.symbolTable.entries()) {
+        const memoryValue = this.loadWord(symbol.address); // Obtener el valor actual desde memoria
+        variables.push({
+            address: symbol.address,
+            value: symbol.value,
+            id: symbol.id,
+            type: symbol.type,
+            memoryValue: memoryValue
+        });
     }
+
+    return variables;
+}
 
     openFile(ast, mode, content= ""){
         // const fd = Object.keys(this.descriptors).length+4;

@@ -16,8 +16,15 @@ class AccessMemory extends Expression {
         this.text = gen.lastTemp;
         if(this.symbol == "=") return this.getMemoryDirection(ast, env, gen);
         if(this.symbol == "!") return this.offsetUpdate(ast, env, gen);
-        // console.log(this.op1, this.op2, this.op3, this.op4)
-        return this.getMemoryValue(ast, env, gen);
+        const op = gen.quadruples[gen.quadruples.length - 1].op;
+        //console.log(ast.registers.getRegister(this.op1[0]))
+
+        // faltan todos los store
+        if (op === "str")
+            return ast.registers.getRegister(this.op1[0]);
+        // faltan todos los load
+        else 
+            return this.getMemoryValue(ast, env, gen);
     }
 
     getMemoryDirection(ast, env, gen){
@@ -44,9 +51,10 @@ class AccessMemory extends Expression {
             if(this.op2 != null){
                 let offset = this.op2.execute(ast, env, gen);
                 // console.log(offset)
-                return rt.value + memory.calculateOffset(ast, rt.value, 'immediate', offset.value, 1, false)
+                return {value:memory.loadWord(rt.value + memory.calculateOffset(ast, rt.value, 'immediate', offset.value, 1, false)),type:'integer'};
             }
-            return rt.value
+            // console.log("reg:",rt.value,"value:",memory.loadWord(rt.value),"type:",'integer');
+            return {value:memory.loadWord(rt.value),type:'integer'};
     }
 
     buildCST(parent, cst) {

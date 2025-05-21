@@ -17,6 +17,10 @@ const Analyze = async ()=>{
     let tbody = document.getElementById('quad-body');
     tbody.innerHTML = '';
 
+        //Se borra la lista de cuadruplos
+    tbody = document.getElementById('address-body');
+    tbody.innerHTML = '';
+
     let buttonStep = document.getElementById("next-inst");
     buttonStep.disabled = true;
     buttonStep.style.color = '#4b5563'
@@ -36,7 +40,7 @@ const Analyze = async ()=>{
 
     try {
         //implementacion del parser
-        let resultado = GRUPO12.parse(content);
+        let resultado = PEG.parse(content);
         console_output.value = "";
         let ast = new Ast();
         let env = new Environment(null, 'Global');
@@ -46,6 +50,8 @@ const Analyze = async ()=>{
         await RootExecuter(resultado, ast, env, gen)
 
         showQuadruples(gen.getQuadruples());
+
+        showMemory(memory.getAllVariables());
         let cst = new Cst();
         
         let startId = cst.newId();
@@ -67,7 +73,7 @@ const Analyze = async ()=>{
         ast.cleanConsole()
     } catch (error) {
         console.log(error)
-        if (error instanceof GRUPO12.SyntaxError) {
+        if (error instanceof PEG.SyntaxError) {
             if (isLexicalError(error)) {
                 printError("Error Léxico", error, console_output);
             } else {
@@ -154,7 +160,7 @@ const AnalyzeDeb = async ()=>{
 
     try {
         //implementacion del parser
-        let resultado = GRUPO12.parse(content);
+        let resultado = PEG.parse(content);
         console_output.value = "";
         let ast = new Ast();
         let env = new Environment(null, 'Global');
@@ -165,7 +171,7 @@ const AnalyzeDeb = async ()=>{
         // console.log(ast.getConsole())   
     } catch (error) {
         console.log(error)
-        if (error instanceof GRUPO12.SyntaxError) {
+        if (error instanceof PEG.SyntaxError) {
             if (isLexicalError(error)) {
                 printError("Error Léxico", error, console_output);
             } else {
@@ -200,6 +206,25 @@ function isLexicalError(e) {
 
 function showQuadruples(quadruples) {
     let tbody = document.getElementById('quad-body');
+    tbody.innerHTML = '';
+
+    quadruples.forEach(function (object) {
+        var newRow = document.createElement('tr');
+        for (var key in object) {
+            let newCell = document.createElement('td');
+            newCell.style.paddingTop = '1rem';
+            newCell.style.paddingBottom = '1rem';
+            newCell.style.borderBottom = '1px solid #4b5563';
+            // console.log(object[key])
+            newCell.textContent = object[key].toString().toLowerCase();
+            newRow.appendChild(newCell);
+        }
+        tbody.appendChild(newRow);
+    });
+}
+
+function showMemory(quadruples) {
+    let tbody = document.getElementById('address-body');
     tbody.innerHTML = '';
 
     quadruples.forEach(function (object) {

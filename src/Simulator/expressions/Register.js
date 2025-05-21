@@ -17,7 +17,7 @@ class Register{
 
         this.value = ast.registers?.getRegister(this.dir);
         // return this.value
-        return {value: this.value.value, type: this.value.type}
+        return {value: this.value?.value, type: this.value.type}
     }
 
     buildCST(parent, cst) {
